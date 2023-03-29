@@ -129,7 +129,7 @@ namespace ConsoleApp2
                 new ThueBao() { diaChi = "Đà Nẵng", gioiTinh = GioiTinh.Nu, hoTen = "Trần Thị B", ngaySinh = DateTime.Now.AddYears(-25), sDT = "4567", soCMND = "9876543210" },
                 new ThueBao() { diaChi = "Hồ Chí Minh", gioiTinh = GioiTinh.Khac, hoTen = "Lý Tấn C", ngaySinh = DateTime.Now.AddYears(-40), sDT = "987654321", soCMND = "1111111111" }
             };
-
+            // phat them 1 dong moi
             DanhBa danhBa = new DanhBa(arr);
             string thanhPhoNhieuNhat = danhBa.TimThanhPhoNhieuThueBaoNhat();
             string thanhPhoItNhat = danhBa.TimThanhPhoItThueBaoNhat();
