@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 namespace ConsoleApp2
 {
 
-    enum GioiTinh { Nam, Nu, Khac };
 
-    class ThueBao
+    public class ThueBao
     {
+        public enum GioiTinh { Nam, Nu, Khac };
+
         public ThueBao()
         {
 
@@ -40,82 +41,43 @@ namespace ConsoleApp2
             Console.WriteLine($"So dien thoai: {thueBao.sDT}");
             Console.WriteLine($"So CMND: {thueBao.soCMND}");
         }
-
+       
 
 
     }
-    class DanhBa
+    public class DanhBa
     {
         public List<ThueBao> danhSachThueBao;
+        public DanhBa()
+        {
+            
+        }
 
         public DanhBa(List<ThueBao> dsThueBao)
         {
             danhSachThueBao = dsThueBao;
         }
+        // diachi-thanhpho
+        //phuonwg8-DaLat
         // Tìm thành phố có nhiều thuê bao nhất
-        public string TimThanhPhoNhieuThueBaoNhat()
+        public List<ThueBao> TimThueBaoCuaThanhPho(string thanhPho)
         {
-            Dictionary<string, int> cityCountDict = new Dictionary<string, int>();
-            foreach (ThueBao thueBao in danhSachThueBao)
+            var dsLocalTB = new List<ThueBao>();
+            foreach(var thueBao in  danhSachThueBao)
             {
-                if (cityCountDict.ContainsKey(thueBao.diaChi))
+                //nếu địa chỉ của thuê bao có chứa (contains) thành phố thì gán đối tượng đó vào localThueBao
+                if (thueBao.diaChi.Contains(thanhPho))
                 {
-                    cityCountDict[thueBao.diaChi]++;
-                }
-                else
-                {
-                    cityCountDict.Add(thueBao.diaChi, 1);
+                    dsLocalTB.Add(thueBao);
                 }
             }
-            return cityCountDict.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-        }
-        public string TimThanhPhoItThueBaoNhat()
-        {
-            Dictionary<string, int> cityCountDict = new Dictionary<string, int>();
-            foreach (ThueBao thueBao in danhSachThueBao)
-            {
-                if (cityCountDict.ContainsKey(thueBao.diaChi))
-                {
-                    cityCountDict[thueBao.diaChi]++;
-                }
-                else
-                {
-                    cityCountDict.Add(thueBao.diaChi, 1);
-                }
-            }
-            return cityCountDict.Aggregate((x, y) => x.Value < y.Value ? x : y).Key;
-        }
-        // Tìm thuê bao sở hữu ít số điện thoại nhất
-        public ThueBao TimThueBaoItSDTNhat()
-        {
-            return danhSachThueBao.OrderBy(t => t.sDT.Length).FirstOrDefault();
+            return dsLocalTB;
         }
 
-        // Sắp xếp khách hàng theo họ tên (tăng dần hoặc giảm dần)
-        public ThueBao[] SapXepTheoHoTen(bool tangDan)
-        {
-            if (tangDan)
-            {
-                return danhSachThueBao.OrderBy(t => t.hoTen).ToArray();
-            }
-            else
-            {
-                return danhSachThueBao.OrderByDescending(t => t.hoTen).ToArray();
-            }
-        }
+        //turyen doi tuong
+        //truyen dia chi
 
-        // Sắp xếp khách hàng theo số lượng số điện thoại sở hữu (tăng dần hoặc giảm dần)
-        public ThueBao[] SapXepTheoSoDT(bool tangDan)
-        {
-            if (tangDan)
-            {
-                return danhSachThueBao.OrderBy(t => t.sDT.Length).ToArray();
-            }
-            else
-            {
-                return danhSachThueBao.OrderByDescending(t => t.sDT.Length).ToArray();
-            }
-        }
+       
     }
 
 
@@ -123,18 +85,20 @@ namespace ConsoleApp2
     {
         static void Main(string[] args)
         {
-            List<ThueBao> arr = new List<ThueBao>()
+            Console.OutputEncoding = Encoding.UTF8;
+            List<ThueBao> danhSachThueBao = new List<ThueBao>();
+            danhSachThueBao.Add(new ThueBao("p6-Đà Nẵng", ThueBao.GioiTinh.Nam, "Nguyen Van A", new DateTime(1990, 1, 1), "0123456789", "123456789"));
+            danhSachThueBao.Add(new ThueBao("p6-Đà Nẵng", ThueBao.GioiTinh.Nu, "Nguyen Van B", new DateTime(1995, 2, 2), "0123456789", "123456789"));
+           
+            DanhBa danhBa = new DanhBa();
+            danhBa.danhSachThueBao = danhSachThueBao;
+            List<ThueBao> thueBaoTheoThanhPho = danhBa.TimThueBaoCuaThanhPho("Đà Nẵng");
+            foreach (var item in thueBaoTheoThanhPho)
             {
-                new ThueBao() { diaChi = "Hà Nội", gioiTinh = GioiTinh.Nam, hoTen = "Nguyễn Văn A", ngaySinh = DateTime.Now.AddYears(-30), sDT = "123456789", soCMND = "0123456789" },
-                new ThueBao() { diaChi = "Đà Nẵng", gioiTinh = GioiTinh.Nu, hoTen = "Trần Thị B", ngaySinh = DateTime.Now.AddYears(-25), sDT = "4567", soCMND = "9876543210" },
-                new ThueBao() { diaChi = "Hồ Chí Minh", gioiTinh = GioiTinh.Khac, hoTen = "Lý Tấn C", ngaySinh = DateTime.Now.AddYears(-40), sDT = "987654321", soCMND = "1111111111" }
-            };
-            // phat them 1 dong moi
-            DanhBa danhBa = new DanhBa(arr);
-            string thanhPhoNhieuNhat = danhBa.TimThanhPhoNhieuThueBaoNhat();
-            string thanhPhoItNhat = danhBa.TimThanhPhoItThueBaoNhat();
-            ThueBao thueBaoItSDTNhat = danhBa.TimThueBaoItSDTNhat();
-            ThueBao[] sapXepTheoHoTenTangDan = danhBa.SapXepTheoHoTen(true);
+                Console.WriteLine(item.hoTen);
+            }
+            Console.WriteLine();
+            Console.ReadLine();
         }
     }
 }
