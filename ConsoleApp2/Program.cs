@@ -76,13 +76,8 @@ namespace ConsoleApp2
 
         //turyen doi tuong
         //truyen dia chi
-        public string TachDiaChiLayThanhPho(ThueBao thueBao)
-        {
-            string str = thueBao.diaChi;
-            string[] arr = str.Split('-');
-            string result = arr[1];
-            return result;
-        }
+
+       
     }
 
 
